@@ -8,9 +8,9 @@
 
 class FileNew::Impl {
 public:
-    std::function<int (int)> openFunc;
-    std::function<int (int)> closeFunc;
-    std::function<int (int, char *)> readFunc;
+    OpenFunc openFunc;
+    CloseFunc closeFunc;
+    ReadFunc readFunc;
 };
 
 FileNew::FileNew() : impl(new Impl) {}
