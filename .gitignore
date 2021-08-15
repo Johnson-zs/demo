@@ -3,3 +3,4 @@ build-design_pattern-unknown-Debug/
 .idea
 build*
 cmake-*
+.DS_Store
