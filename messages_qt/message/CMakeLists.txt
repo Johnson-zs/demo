@@ -5,6 +5,8 @@ project(message)
 set(SRCS
     message.h
     message.cpp
+    messagehelper.h
+    invokehelper.h
     )
 
 add_library(${PROJECT_NAME} SHARED

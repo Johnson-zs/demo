@@ -20,53 +20,5 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "testa.h"
-#include "message.h"
+#include "messagehelper.h"
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#include <QDebug>
-
-static const QString MsgId = "test_id";
-
-TestA::TestA(QObject *parent)
-    : QObject (parent)
-{
-
-}
-
-void TestA::doSomething()
-{
-    QMap<QString, QVariant> map;
-    map["a"] = 11;
-    map["b"] = 22;
-    message::Sender sender(MsgId);
-    auto v = sender.send(map, 5, "123", 123, 2);
-    sender.send("fe");
-
-    QVariantList list;
-    list << "aaa" << 5 << 2.58;
-    sender.send(list);
-    QString teststr("asasfwegger");
-    const QString &ref = teststr;
-    sender.send(ref);
-
-    sender.post(5, "123", 123, 2);
-    sender.post("fe");
-    sender.post(list);
-
-    pid_t fd = fork();
-    if (fd == 0) {
-        qDebug() << "child";
-    } else if (fd > 0) {
-
-    } else {
-        abort();
-    }
-
-    int status;
-    waitpid(-1, &status, WNOHANG);
-}

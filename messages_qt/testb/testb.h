@@ -25,12 +25,26 @@
 
 #include <QObject>
 
+namespace message {
+class Receiver;
+} // namespace message
+
 class TestB: public QObject
 {
     Q_OBJECT
-
 public:
     TestB(QObject *parent = nullptr);
+    ~TestB();
+
+    void subMessage(const QString &id);
+
+    Q_SLOT qint64 testSlot(int a, double b);
+    Q_SLOT qint64 testSlot1(int a, double b, const QString &str);
+
+private:
+    message::Receiver *r = nullptr;
 };
+
+
 
 #endif // TESTB_H

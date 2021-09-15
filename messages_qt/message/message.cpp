@@ -22,7 +22,53 @@
 */
 #include "message.h"
 
-Message::Message()
+#include <QVariant>
+
+using namespace message;
+
+Sender::Sender(const QString &id)
+    : messageId(id)
 {
 
+}
+
+Sender::Result Sender::send(const QVariantList &params)
+{
+    Result ret;
+    qDebug() << "send : " << params;
+    // send
+    return ret;
+}
+
+void Sender::post(const QVariantList &params)
+{
+    qDebug() << "pos : " << params;
+    // send
+}
+
+
+Receiver::Receiver(const QString &id) :
+    messageId(id)
+{
+
+}
+
+Receiver::~Receiver()
+{
+    // TODO
+}
+
+QString Receiver::id() const
+{
+    return messageId;
+}
+
+std::function<QVariant (const QVariantList &)> Receiver::callback() const
+{
+    return func;
+}
+
+bool Receiver::doBind()
+{
+    // TODO
 }
