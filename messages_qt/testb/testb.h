@@ -36,13 +36,11 @@ public:
     TestB(QObject *parent = nullptr);
     ~TestB();
 
-    void subMessage(const QString &id);
+    Q_SIGNAL void testSig(int a, int b);
 
     Q_SLOT qint64 testSlot(int a, double b);
     Q_SLOT qint64 testSlot1(int a, double b, const QString &str);
 
-private:
-    message::Receiver *r = nullptr;
 };
 
 

@@ -24,33 +24,34 @@
 #include "message.h"
 
 #include <QDebug>
-
+#include <QThread>
 
 TestB::TestB(QObject *parent)
     : QObject (parent)
 {
-
+    connect(this, &TestB::testSig, this, [](int a, int b) {
+        qDebug() << a << b;
+    });
 }
 
 TestB::~TestB()
 {
-    if (r)
-        delete r;
+
 }
 
-void TestB::subMessage(const QString &id)
-{
-    r = new message::Receiver(id);
-    r->bind(this, &TestB::testSlot);
-}
+
 
 qint64 TestB::testSlot(int a, double b)
 {
+    qDebug() << "->" << __PRETTY_FUNCTION__;
     return a + static_cast<qint64>(b);
 }
 
 qint64 TestB::testSlot1(int a, double b, const QString &str)
 {
+    qDebug() << QThread::currentThreadId();
+    QThread::msleep(3000);
+    qDebug() << "->" << __PRETTY_FUNCTION__;
     qDebug() << str;
     return a + static_cast<qint64>(b);
 }

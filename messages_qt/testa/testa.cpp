@@ -37,36 +37,47 @@ TestA::TestA(QObject *parent)
 {
 
 }
-
-void TestA::doSomething()
+void TestA::sync()
 {
-    QMap<QString, QVariant> map;
-    map["a"] = 11;
-    map["b"] = 22;
     message::Sender sender(MsgId);
-    auto v = sender.send(map, 5, "123", 123, 2);
-    sender.send("fe");
+    auto ret = sender.send(1, 2, 3);
+    qDebug() << ret.r << ret.v;
+//    QMap<QString, QVariant> map;
+//    map["a"] = 11;
+//    map["b"] = 22;
+//    message::Sender sender(MsgId);
+//    auto v = sender.send(map, 5, "123", 123, 2);
+//    sender.send("fe");
 
-    QVariantList list;
-    list << "aaa" << 5 << 2.58;
-    sender.send(list);
-    QString teststr("asasfwegger");
-    const QString &ref = teststr;
-    sender.send(ref);
+//    QVariantList list;
+//    list << "aaa" << 5 << 2.58;
+//    sender.send(list);
+//    QString teststr("asasfwegger");
+//    const QString &ref = teststr;
+//    sender.send(ref);
 
-    sender.post(5, "123", 123, 2);
-    sender.post("fe");
-    sender.post(list);
+//    sender.post(5, "123", 123, 2);
+//    sender.post("fe");
+//    sender.post(list);
 
-    pid_t fd = fork();
-    if (fd == 0) {
-        qDebug() << "child";
-    } else if (fd > 0) {
+//    pid_t fd = fork();
+//    if (fd == 0) {
+//        qDebug() << "child";
+//    } else if (fd > 0) {
 
-    } else {
-        abort();
-    }
+//    } else {
+//        abort();
+//    }
 
-    int status;
-    waitpid(-1, &status, WNOHANG);
+//    int status;
+    //    waitpid(-1, &status, WNOHANG);
+}
+
+void TestA::async()
+{
+    message::Sender sender(MsgId);
+    auto future = sender.asyncSend(1, 2, 3);
+    future.waitForFinished();
+    auto ret = future.result();
+    qDebug() << ret.r << ret.v;
 }

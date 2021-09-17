@@ -26,40 +26,56 @@
 #include "invokehelper.h"
 #include "messagehelper.h"
 
-#include <QDebug>
-#include <QSet>
 #include <QMap>
+#include <QPointer>
+#include <QFuture>
 
 #include <functional>
 
 namespace message {
 
+struct Result {
+    bool r;
+    QVariant v;
+};
+
+class Future {
+public:
+    explicit Future(const QFuture<message::Result> &future);
+
+    void cancel();
+    bool isCanceled() const;
+
+    bool isStarted() const;
+    bool isFinished() const;
+    bool isRunning() const;
+
+    void waitForFinished();
+    message::Result result() const;
+
+private:
+    QFuture<message::Result> curFuture;
+};
+
 class Sender final
 {
 public:
-    struct Result {
-        bool r;
-        QVariant v;
-    };
-
-public:
     explicit Sender(const QString &id);
 
-    Result send(const QVariantList &params);
-    void post(const QVariantList &params);
-
+    message::Result send(const QVariantList &params);
     template <class T, class ...Args>
-    inline Result send(T param, Args&& ...args) {
+    inline message::Result send(T param, Args&& ...args) {
         QVariantList ret;
-        makeVariantList(&ret, param, args...);
+        makeVariantList(&ret, param, std::forward<Args>(args)...);
         return send(ret);
     }
 
+    message::Future asyncSend(const QVariantList &params);
     template <class T, class ...Args>
-    inline void post(T param, Args&& ...args) {
+    inline message::Future asyncSend(T param, Args&& ...args) {
         QVariantList ret;
-        makeVariantList(&ret, param, args...);
-        return post(ret);
+        makeVariantList(&ret, param, std::forward<Args>(args)...);
+        return asyncSend(ret);
     }
 
 private:
@@ -91,16 +107,24 @@ public:
             MessageHelper<decltype(method)> helper = (MessageHelper<decltype(method)>(obj, method));
             return helper.invoke(args);
         };
-
         return doBind();
     }
 
+    void unbind();
+
+    template <class T, class Func>
+    inline bool rebind(T *obj, Func method) {
+        static_assert(std::is_base_of<QObject, T>::value, "Template type T must be derived QObject");
+        static_assert(!std::is_pointer<T>::value, "Receiver::bind's template type T must not be a pointer type");
+        unbind();
+        return bind(obj, method);
+    }
 private:
     bool doBind();
 
 private:
     QString messageId;
-    std::function<QVariant(const QVariantList&)> func; // 最终接收 message 参数并执行的函数
+    std::function<QVariant(const QVariantList&)> func;
 };
 } // namespace message
 

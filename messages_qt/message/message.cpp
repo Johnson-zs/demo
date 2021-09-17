@@ -21,8 +21,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "message.h"
+#include "message_p.h"
 
+#include <QDebug>
 #include <QVariant>
+#include <QtConcurrent>
 
 using namespace message;
 
@@ -32,18 +35,33 @@ Sender::Sender(const QString &id)
 
 }
 
-Sender::Result Sender::send(const QVariantList &params)
+message::Result Sender::send(const QVariantList &params)
 {
-    Result ret;
-    qDebug() << "send : " << params;
-    // send
+    Result ret {false, QVariant()};
+
+    auto &&receivers = MessageManager::instance().allReceivers;
+    if (!receivers.contains(messageId))
+        return ret;
+
+    auto receiver = receivers.value(messageId);
+    if (!receiver)
+        return ret;
+
+    ret.r = true;
+    ret.v = receiver->callback()(params);
+
     return ret;
 }
 
-void Sender::post(const QVariantList &params)
+message::Future Sender::asyncSend(const QVariantList &params)
 {
-    qDebug() << "pos : " << params;
-    // send
+    QThreadPool *pool = message::threadPool;
+
+    if (pool->maxThreadCount() <= pool->activeThreadCount())
+        pool->setMaxThreadCount(pool->maxThreadCount() + 2);
+
+    using type = message::Result(message::Sender::*)(const QVariantList &);
+    return message::Future(QtConcurrent::run(pool, this, static_cast<type>(&Sender::send), params));
 }
 
 
@@ -55,7 +73,7 @@ Receiver::Receiver(const QString &id) :
 
 Receiver::~Receiver()
 {
-    // TODO
+   unbind();
 }
 
 QString Receiver::id() const
@@ -68,7 +86,53 @@ std::function<QVariant (const QVariantList &)> Receiver::callback() const
     return func;
 }
 
+void Receiver::unbind()
+{
+    MessageManager::instance().unregisterReceiver(messageId);
+}
+
 bool Receiver::doBind()
 {
-    // TODO
+    return MessageManager::instance().registerReceiver(messageId, this);
+}
+
+Future::Future(const QFuture<Result> &future)
+    : curFuture(future)
+{
+
+}
+
+void Future::cancel()
+{
+    curFuture.cancel();
+}
+
+bool Future::isCanceled() const
+{
+    return curFuture.isCanceled();
+}
+
+bool Future::isStarted() const
+{
+    return curFuture.isStarted();
+}
+
+bool Future::isFinished() const
+{
+    return curFuture.isFinished();
+}
+
+bool Future::isRunning() const
+{
+    return curFuture.isRunning();
+}
+
+void Future::waitForFinished()
+{
+    curFuture.waitForFinished();
+}
+
+Result Future::result() const
+{
+    return curFuture.result();
 }

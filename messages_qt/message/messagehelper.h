@@ -26,6 +26,10 @@
 #include <QVariant>
 #include <QObject>
 
+namespace message{
+
+
+
 /*
  * copy from qobjectdefs_impl.h
  * trick to set the return value of a slot that works even if the signal or the slot returns void
@@ -284,6 +288,6 @@ protected:
     T* s;
     Func f;
 };
-
+} // namespace message
 
 #endif // MESSAGEHELPER_H
