@@ -101,7 +101,7 @@ static void bench_message_no_param(benchmark::State &state)
 }
 BENCHMARK(bench_message_no_param);
 
-// messgge 机制通信
+// messgge 机制异步通信
 static void bench_message_no_param_async(benchmark::State &state)
 {
     message::Sender sender("test");
