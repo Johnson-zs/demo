@@ -8,7 +8,7 @@ SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wl,--as-need -fPIE")
 
 # Use Qt modules
-set(QtFindModules Core Gui Widgets Concurrent Svg Network Sql X11Extras)
+set(QtFindModules Core Gui Widgets Concurrent)
 
 foreach(QtModule ${QtFindModules})
     find_package(Qt5 COMPONENTS ${QtModule} REQUIRED)
@@ -21,6 +21,8 @@ foreach(QtModule ${QtFindModules})
     message("QtModule found ${QtModule} OK!")
 endforeach()
 
+find_package(benchmark REQUIRED)
+
 include_directories(${PROJECT_SOURCE_DIR}/message)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/testa)
@@ -28,10 +30,20 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/testb)
 add_subdirectory(${PROJECT_SOURCE_DIR}/message)
 
 add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME}_perf benchmark.cpp)
+
 
 target_link_libraries(
     ${PROJECT_NAME}
     testa
     testb
     ${QtUseModules}
+    )
+
+target_link_libraries(
+    ${PROJECT_NAME}_perf
+    testa
+    testb
+    ${QtUseModules}
+    benchmark::benchmark
     )

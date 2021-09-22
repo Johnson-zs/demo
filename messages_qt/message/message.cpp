@@ -35,6 +35,11 @@ Sender::Sender(const QString &id)
 
 }
 
+Result Sender::send()
+{
+    return send(QVariantList());
+}
+
 message::Result Sender::send(const QVariantList &params)
 {
     Result ret {false, QVariant()};
@@ -51,6 +56,11 @@ message::Result Sender::send(const QVariantList &params)
     ret.v = receiver->callback()(params);
 
     return ret;
+}
+
+Future Sender::asyncSend()
+{
+    return asyncSend(QVariantList());
 }
 
 message::Future Sender::asyncSend(const QVariantList &params)

@@ -7,15 +7,13 @@
 #include "testa/testa.h"
 #include "testb/testb.h"
 
-#include <malloc.h>
-
 static TestA testa;
 
 void test_send()
 {
     TestB b;
     message::Receiver r("test_id");
-    r.bind(&b, &TestB::testSlot);
+    r.bind(&b, &TestB::testSlot2);
     testa.sync();
 }
 
@@ -24,7 +22,7 @@ void test_destruct()
     TestB b;
     {
     message::Receiver r("test_id");
-    r.bind(&b, &TestB::testSlot);
+    r.bind(&b, &TestB::testSlot2);
     }
     testa.sync();
 }
@@ -33,8 +31,8 @@ void test_rebind()
 {
     TestB b;
     message::Receiver r("test_id");
-    r.bind(&b, &TestB::testSlot);
-    r.rebind(&b, &TestB::testSlot1);
+    r.bind(&b, &TestB::testSlot2);
+    r.rebind(&b, &TestB::testSlot3);
     testa.sync();
 }
 
@@ -42,7 +40,7 @@ void test_obj_destruct()
 {
     message::Receiver r("test_id");
     TestB *b = new TestB;
-    r.bind(b, &TestB::testSlot);
+    r.bind(b, &TestB::testSlot2);
     delete b;
     testa.sync();
 }
@@ -60,8 +58,8 @@ void test_async_send()
     qDebug() << QThread::currentThreadId();
     TestB b;
     message::Receiver r("test_id");
-    r.bind(&b, &TestB::testSlot);
-    r.rebind(&b, &TestB::testSlot1);
+    r.bind(&b, &TestB::testSlot2);
+    r.rebind(&b, &TestB::testSlot3);
     testa.async();
 }
 

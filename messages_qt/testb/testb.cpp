@@ -39,15 +39,19 @@ TestB::~TestB()
 
 }
 
-
-
-qint64 TestB::testSlot(int a, double b)
+void TestB::testSlot()
 {
-    qDebug() << "->" << __PRETTY_FUNCTION__;
+
+}
+
+
+qint64 TestB::testSlot2(int a, double b)
+{
+    //qDebug() << "->" << __PRETTY_FUNCTION__;
     return a + static_cast<qint64>(b);
 }
 
-qint64 TestB::testSlot1(int a, double b, const QString &str)
+qint64 TestB::testSlot3(int a, double b, const QString &str)
 {
     qDebug() << QThread::currentThreadId();
     QThread::msleep(3000);

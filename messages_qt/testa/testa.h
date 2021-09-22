@@ -31,9 +31,13 @@ class TestA: public QObject
 
 public:
     TestA(QObject *parent = nullptr);
-
     void sync();
     void async();
+
+signals:
+    void testSignal();
+    void testSignal2(int a, double b);
+
 };
 
 #endif // TESTA_H

@@ -62,6 +62,7 @@ class Sender final
 public:
     explicit Sender(const QString &id);
 
+    message::Result send();
     message::Result send(const QVariantList &params);
     template <class T, class ...Args>
     inline message::Result send(T param, Args&& ...args) {
@@ -70,6 +71,7 @@ public:
         return send(ret);
     }
 
+    message::Future asyncSend();
     message::Future asyncSend(const QVariantList &params);
     template <class T, class ...Args>
     inline message::Future asyncSend(T param, Args&& ...args) {

@@ -38,11 +38,11 @@ public:
 
     Q_SIGNAL void testSig(int a, int b);
 
-    Q_SLOT qint64 testSlot(int a, double b);
-    Q_SLOT qint64 testSlot1(int a, double b, const QString &str);
+    Q_SLOT void testSlot();
+    Q_SLOT qint64 testSlot2(int a, double b);
+    Q_SLOT qint64 testSlot3(int a, double b, const QString &str);
 
 };
-
 
 
 #endif // TESTB_H
