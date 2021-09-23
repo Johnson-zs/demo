@@ -108,6 +108,7 @@ public:
         infoList.clear();
     }
 
+private:
     inline static void registerHandler(EventHandler::Type type, const QStringList &topics, CreateFunc creator)
     {
         QMutexLocker locker(eventMutex());
@@ -127,10 +128,9 @@ public:
             };
         }
 
-        infoList.append(HandlerInfo{"", nullptr, invoke, topics});
+        infoList.append(HandlerInfo{"", nullptr, invoke, topics, QFuture<void>()});
     }
 
-private:
     inline static QList<HandlerInfo> &getInfoList()
     {
         static QList<HandlerInfo> eventHandlers;

@@ -94,20 +94,16 @@ private:
  *     Q_OBJECT
  *
  * public:
+ *     WindowEventHandler(): AutoEventHandlerRegister<WindowEventHandler>() {}
+ *
  *     static EventHandler::Type type()
  *     {
- *         assert(!registered!;
  *         return EventHandler::Type::Sync;
  *     }
  *
  *     static QStringList topics()
  *     {
- *          return "WindowEvent";
- *     }
- *
- *     void eventProcess(const Event&) override
- *     {
- *          do something..
+ *          return QStringList() << "WindowEvent";
  *     }
  * };
  */
