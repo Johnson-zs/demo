@@ -20,28 +20,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef EVENT_H
+#define EVENT_H
 
-#include <QCoreApplication>
-#include <QDebug>
+#include <QString>
+#include <QVariant>
+#include <QSharedData>
 
-#include "event/eventcallproxy.h"
+class EventPrivate;
 
-int main(int argc, char *argv[])
+/**
+ * @brief The Event class
+ *  事件数据源，只能当做类使用不可继承
+ *  禁止被继承
+ */
+class Event final
 {
-    QCoreApplication a(argc, argv);
-    Event e("WindowEvent");
-    e.setData("123");
-    e.setProperty("aa", "bb");
-    EventCallProxy::pubEvent(e);
+    EventPrivate *const d;
+    friend Q_CORE_EXPORT QDebug operator <<(QDebug, const Event &);
 
-    Event e2("FileEvent");
-    e2.setData("12345");
-    e2.setProperty("aa", "bb");
-    EventCallProxy::pubEvent(e2);
-    EventCallProxy::pubEvent(e);
+public:
+    Event();
+    explicit Event(const QString &topic);
+    explicit Event(const Event& event);
+    ~Event();
 
-    EventCallProxy::removeHandler("WindowEventHandler");
-    EventCallProxy::removeAllHandlers();
-    return a.exec();
-}
+    void setTopic(const QString &topic);
+    QString topic() const;
 
+    void setData(const QVariant &data);
+    QVariant data() const;
+
+    void setProperty(const QString& key, const QVariant value);
+    QVariant property(const QString &key) const;
+};
+
+QT_BEGIN_NAMESPACE
+#ifndef QT_NO_DEBUG_STREAM
+Q_CORE_EXPORT QDebug operator <<(QDebug, const Event &);
+#endif //QT_NO_DEBUG_STREAM
+QT_END_NAMESPACE
+
+#endif // EVENT_H

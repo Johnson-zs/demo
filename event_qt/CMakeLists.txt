@@ -7,6 +7,7 @@ SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wl,--as-need -fPIE")
 
+add_definitions(-DQT_NO_DEBUG_OUTPUT)
 # Use Qt modules
 set(QtFindModules Core Gui Widgets Concurrent)
 
@@ -25,14 +26,16 @@ find_package(PkgConfig REQUIRED)
 find_package(benchmark REQUIRED)
 
 set(SRCS
-    event.h
-    event_p.h
-    event.cpp
-    eventhandler.h
-    eventhandler_p.h
-    eventhandler.cpp
-    eventcallproxy.h
-    eventcallproxy.cpp
+    event/event.h
+    event/event_p.h
+    event/event.cpp
+    event/eventhandler.h
+    event/eventhandler.cpp
+    event/eventcallproxy.h
+    windoweventhandler.cpp
+    windoweventhandler.h
+    fileeventhandler.cpp
+    fileeventhandler.h
     )
 
 add_executable(${PROJECT_NAME}

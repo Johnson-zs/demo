@@ -21,12 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "eventhandler.h"
-#include "event.h"
-#include "eventhandler_p.h"
 
-EventHandler::EventHandler()
-    : QObject (nullptr)
-    , d(new EventHandlerPrivate(this))
+EventHandler::EventHandler(QObject *parent)
+    : QObject (parent)
 {
 
 }

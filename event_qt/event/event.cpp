@@ -38,6 +38,12 @@ Event::Event()
 
 }
 
+Event::Event(const QString &topic)
+    : d(new EventPrivate(this))
+{
+    setTopic(topic);
+}
+
 Event::Event(const Event &event):
     d(new EventPrivate(this))
 {

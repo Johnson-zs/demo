@@ -20,46 +20,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef EVENT_H
-#define EVENT_H
+#ifndef FILEEVENTHANDLER_H
+#define FILEEVENTHANDLER_H
 
-#include <QString>
-#include <QVariant>
-#include <QSharedData>
+#include "event/eventcallproxy.h"
 
-class EventPrivate;
-
-/**
- * @brief The Event class
- *  事件数据源，只能当做类使用不可继承
- *  禁止被继承
- */
-class Event final
+class FileEventHandler: public EventHandler, AutoEventHandlerRegister<FileEventHandler>
 {
-    EventPrivate *const d;
-    friend Q_CORE_EXPORT QDebug operator <<(QDebug, const Event &);
-
 public:
-    Event();
-    explicit Event(const QString &topic);
-    Event(const Event& event);
+    FileEventHandler(): AutoEventHandlerRegister<FileEventHandler>() {}
 
-    virtual ~Event();
+    static EventHandler::Type type()
+    {
+        return EventHandler::Type::Async;
+    }
 
-    void setTopic(const QString &topic);
-    QString topic() const;
+    static QStringList topics()
+    {
+         return QStringList() << "FileEvent";
+    }
 
-    void setData(const QVariant &data);
-    QVariant data() const;
+    void eventProcess(const Event&) override;
 
-    void setProperty(const QString& key, const QVariant value);
-    QVariant property(const QString &key) const;
 };
 
-QT_BEGIN_NAMESPACE
-#ifndef QT_NO_DEBUG_STREAM
-Q_CORE_EXPORT QDebug operator <<(QDebug, const Event &);
-#endif //QT_NO_DEBUG_STREAM
-QT_END_NAMESPACE
-
-#endif // EVENT_H
+#endif // FILEEVENTHANDLER_H

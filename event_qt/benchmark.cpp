@@ -20,6 +20,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <QApplication>
+#include <QPointer>
+#include <QDebug>
+#include <QThread>
 #include <benchmark/benchmark.h>
+
+#include "event/eventcallproxy.h"
+#include "windoweventhandler.h"
+
+static void bench_event_sync(benchmark::State &state)
+{
+    Event e("WindowEvent");
+    e.setData("123");
+    e.setProperty("aa", "bb");
+
+    for (auto _: state) {
+        EventCallProxy::pubEvent(e);
+    }
+}
+BENCHMARK(bench_event_sync);
+
+static WindowEventHandler handler;
+static void bench_qt_signal_slot(benchmark::State &state)
+{
+    Event e("WindowEvent");
+    e.setData("123");
+    e.setProperty("aa", "bb");
+    QObject::connect(&handler, &WindowEventHandler::testSignal,
+                     &handler, &WindowEventHandler::slotEventProcess);
+
+    for (auto _: state) {
+        emit handler.testSignal(e);
+    }
+}
+BENCHMARK(bench_qt_signal_slot);
 
 BENCHMARK_MAIN();

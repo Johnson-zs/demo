@@ -1,10 +1,11 @@
 /*
  * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co., Ltd.
  *
- * Author:     huanyu<huanyu@uniontech.com>
+ * Author:     zhangsheng<zhangsheng@uniontech.com>
  *
- * Maintainer: zhengyouge<zhengyouge@uniontech.com>
- *             yanghao<yanghao@uniontech.com>
+ * Maintainer: max-lv<lvwujun@uniontech.com>
+ *             lanxuesong<lanxuesong@uniontech.com>
+ *             xushitong<xushitong@uniontech.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,28 +19,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-#ifndef EVENTHANDLER_P_H
-#define EVENTHANDLER_P_H
+*/
+#include "windoweventhandler.h"
 
-#include "eventhandler.h"
-
-class EventHandlerPrivate
+void WindowEventHandler::eventProcess(const Event &e)
 {
-    friend class EventHandler;
-    EventHandler *const q;
-    EventHandler::Type type;
+    qDebug() << __PRETTY_FUNCTION__ << QThread::currentThreadId();
+    qDebug() << e.topic();
+    qDebug() << e.data();
+    qDebug() << e.property("aa");
+}
 
-public:
-    //与public 接口保持一致
-    EventHandlerPrivate() = delete;
-    EventHandlerPrivate(EventHandler* qq)
-        : q(qq)
-    {
-
-    }
-};
-
-
-
-#endif // EVENTHANDLER_P_H
+void WindowEventHandler::slotEventProcess(const Event &e)
+{
+    qDebug() << __PRETTY_FUNCTION__ << QThread::currentThreadId();
+    qDebug() << e.topic();
+    qDebug() << e.data();
+    qDebug() << e.property("aa");
+}

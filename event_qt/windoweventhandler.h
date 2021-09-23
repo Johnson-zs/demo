@@ -20,14 +20,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef EVENTCALLPROXY_H
-#define EVENTCALLPROXY_H
+#ifndef WINDOWEVENTHANDLER_H
+#define WINDOWEVENTHANDLER_H
 
+#include "event/eventcallproxy.h"
 
-class EventCallProxy
+class WindowEventHandler: public EventHandler, AutoEventHandlerRegister<WindowEventHandler>
 {
+    Q_OBJECT
+
 public:
-    EventCallProxy();
+    WindowEventHandler(): AutoEventHandlerRegister<WindowEventHandler>() {}
+
+    static EventHandler::Type type()
+    {
+        return EventHandler::Type::Sync;
+    }
+
+    static QStringList topics()
+    {
+         return QStringList() << "WindowEvent";
+    }
+
+    void eventProcess(const Event&) override;
+
+    Q_SIGNAL void testSignal(const Event&);
+    Q_SLOT void slotEventProcess(const Event&);
+
 };
 
-#endif // EVENTCALLPROXY_H
+#endif // WINDOWEVENTHANDLER_H

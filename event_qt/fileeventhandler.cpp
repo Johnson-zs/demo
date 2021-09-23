@@ -20,9 +20,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "eventcallproxy.h"
+#include "fileeventhandler.h"
 
-EventCallProxy::EventCallProxy()
+
+void FileEventHandler::eventProcess(const Event &e)
 {
-
+    qDebug() << __PRETTY_FUNCTION__ << QThread::currentThreadId();
+    qDebug() << e.topic();
+    qDebug() << e.data();
+    qDebug() << e.property("aa");
 }
