@@ -85,6 +85,7 @@ public:
                 break;
             }
             ++i;
+            ++iter;
         }
 
         if (flag)
@@ -104,6 +105,7 @@ public:
                 delete iter->handler;
                 iter->handler = nullptr;
             }
+            ++iter;
         }
         infoList.clear();
     }
