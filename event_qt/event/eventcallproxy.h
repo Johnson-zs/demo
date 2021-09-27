@@ -160,7 +160,8 @@ bool AutoEventHandlerRegister<T>::isRegistered = AutoEventHandlerRegister<T>::tr
 template <typename T>
 bool AutoEventHandlerRegister<T>::trigger()
 {
-    EventCallProxy::registerHandler(T::type(), T::topics(), [] { return new T(); });
+    qInfo() << __PRETTY_FUNCTION__ << QString(typeid (T).name()) ;
+    EventCallProxy::registerHandler(T::type(), T::topics(), []()->EventHandler* { return new T(); });
     return true;
 }
 

@@ -27,6 +27,7 @@
 
 class FileEventHandler: public EventHandler, AutoEventHandlerRegister<FileEventHandler>
 {
+    Q_OBJECT
 public:
     FileEventHandler(): AutoEventHandlerRegister<FileEventHandler>() {}
 
